@@ -10,6 +10,8 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
+import CommentForm from "./CommentFormComponent";
+
 function RenderDish({ dish }) {
   if (dish != null)
     return (
@@ -61,17 +63,20 @@ const DishDetail = (props) => {
     return (
       <div className="container">
         <div className="row">
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to="/menu">Menu</Link>
-            </BreadcrumbItem>
-            <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-          </Breadcrumb>
-          <div className="col-12 col-md-5 m-1">
+          <div className="col-12">
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <Link to="/menu">Menu</Link>
+              </BreadcrumbItem>
+              <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+            </Breadcrumb>
+          </div>
+          <div className="col-12 col-md-5 mb-4">
             <RenderDish dish={props.dish} />
           </div>
           <div className="col-12 col-md-5 p-4">
             <RenderComments comments={props.comments} />
+            <CommentForm />
           </div>
         </div>
       </div>
