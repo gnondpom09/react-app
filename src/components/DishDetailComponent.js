@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 
 import CommentForm from "./CommentFormComponent";
 
+import { Loading } from "./LoadingComponent";
+
 function RenderDish({ dish }) {
   if (dish != null)
     return (
@@ -28,7 +30,7 @@ function RenderDish({ dish }) {
   else return <div></div>;
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
   if (comments != null) {
     const commentsList = comments.map((com) => {
       return (
@@ -51,6 +53,7 @@ function RenderComments({ comments }) {
       <div className="comments">
         <h5>Comments</h5>
         {commentsList}
+        <CommentForm dishId={dishId} addComment={addComment} />
       </div>
     );
   } else {
@@ -59,7 +62,23 @@ function RenderComments({ comments }) {
 }
 
 const DishDetail = (props) => {
-  if (props.dish != null) {
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  } else if (props.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <h4>{props.errMess}</h4>
+        </div>
+      </div>
+    );
+  } else if (props.dish != null) {
     return (
       <div className="container">
         <div className="row">
@@ -75,8 +94,11 @@ const DishDetail = (props) => {
             <RenderDish dish={props.dish} />
           </div>
           <div className="col-12 col-md-5 p-4">
-            <RenderComments comments={props.comments} />
-            <CommentForm />
+            <RenderComments
+              comments={props.comments}
+              addComment={props.addComment}
+              dishId={props.dish.id}
+            />
           </div>
         </div>
       </div>

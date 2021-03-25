@@ -6,10 +6,7 @@ import {
   ModalBody,
   ModalHeader,
   Button,
-  Form,
-  FormGroup,
   Label,
-  Input,
   Row,
   Col,
 } from "reactstrap";
@@ -40,13 +37,11 @@ class CommentForm extends Component {
 
   sendComment(values) {
     this.toggleModal();
-    alert(
-      "Username: " +
-        values.pseudo +
-        " vote: " +
-        values.rating +
-        " comment: " +
-        values.message
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.author,
+      values.comment
     );
   }
 
@@ -86,10 +81,10 @@ class CommentForm extends Component {
                 </Label>
                 <Col md={10}>
                   <Control.text
-                    model=".pseudo"
-                    id="pseudo"
-                    name="pseudo"
-                    placeholder="pseudo"
+                    model=".author"
+                    id="author"
+                    name="author"
+                    placeholder="author"
                     className="form-control"
                     validators={{
                       required,
@@ -99,7 +94,7 @@ class CommentForm extends Component {
                   />
                   <Errors
                     className="text-danger"
-                    model=".pseudo"
+                    model=".author"
                     show="touched"
                     messages={{
                       required: "Required",
@@ -110,14 +105,14 @@ class CommentForm extends Component {
                 </Col>
               </Row>
               <Row className="form-group">
-                <Label htmlFor="message" md={2}>
+                <Label htmlFor="comment" md={2}>
                   Your comment
                 </Label>
                 <Col md={10}>
                   <Control.textarea
-                    model=".message"
-                    id="message"
-                    name="message"
+                    model=".comment"
+                    id="comment"
+                    name="comment"
                     rows="12"
                     className="form-control"
                   />
