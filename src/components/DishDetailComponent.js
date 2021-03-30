@@ -15,18 +15,27 @@ import { Loading } from "./LoadingComponent";
 
 import { baseUrl } from "../shared/baseUrl";
 
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
+
 function RenderDish({ dish }) {
   if (dish != null)
     return (
-      <Card>
-        <CardImg src={baseUrl + dish.image} alt={dish.name} />
-        <CardBody>
-          <CardTitle>
-            <h4>{dish.name}</h4>
-          </CardTitle>
-          <CardText>{dish.description}</CardText>
-        </CardBody>
-      </Card>
+      <FadeTransform
+        in
+        transformProps={{
+          exitTransform: "scale(0.5) translateY(-50%)",
+        }}
+      >
+        <Card>
+          <CardImg src={baseUrl + dish.image} alt={dish.name} />
+          <CardBody>
+            <CardTitle>
+              <h4>{dish.name}</h4>
+            </CardTitle>
+            <CardText>{dish.description}</CardText>
+          </CardBody>
+        </Card>
+      </FadeTransform>
     );
   else return <div></div>;
 }
@@ -35,25 +44,27 @@ function RenderComments({ comments, postComment, dishId }) {
   if (comments != null) {
     const commentsList = comments.map((com) => {
       return (
-        <div key={com.id}>
-          <ul className="list-unstyled">
-            <li>{com.comment}</li>
-            <span className="author">
-              -- {com.author},{" "}
-              {new Intl.DateTimeFormat("fr-FR", {
-                year: "numeric",
-                month: "short",
-                day: "2-digit",
-              }).format(new Date(Date.parse(com.date)))}
-            </span>
-          </ul>
-        </div>
+        <Fade in>
+          <div key={com.id}>
+            <ul className="list-unstyled">
+              <li>{com.comment}</li>
+              <span className="author">
+                -- {com.author},{" "}
+                {new Intl.DateTimeFormat("fr-FR", {
+                  year: "numeric",
+                  month: "short",
+                  day: "2-digit",
+                }).format(new Date(Date.parse(com.date)))}
+              </span>
+            </ul>
+          </div>
+        </Fade>
       );
     });
     return (
       <div className="comments">
         <h5>Comments</h5>
-        {commentsList}
+        <Stagger in>{commentsList}</Stagger>
         <CommentForm dishId={dishId} postComment={postComment} />
       </div>
     );

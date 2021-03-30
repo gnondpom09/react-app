@@ -9,6 +9,10 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
+import { baseUrl } from "../shared/baseUrl";
+
+import { FadeTransform, Stagger } from "react-animation-components";
+
 function RenderLeader({ leader }) {
   if (leader != null) {
     return (
@@ -17,7 +21,7 @@ function RenderLeader({ leader }) {
           <Media
             className="mr-4 mt-2"
             object
-            src={leader.image}
+            src={baseUrl + leader.image}
             alt={leader.image}
           />
         </Media>
@@ -32,11 +36,18 @@ function RenderLeader({ leader }) {
 
 function About(props) {
   console.log(props);
-  const leaders = props.leaders.map((leader) => {
+  const leaders = props.leaders.leaders.map((leader) => {
     return (
-      <div key={leader.id}>
-        <RenderLeader leader={leader} />;
-      </div>
+      <FadeTransform
+        in
+        transformProps={{
+          exitTransform: "translateX(50%)",
+        }}
+      >
+        <div key={leader.id}>
+          <RenderLeader leader={leader} />;
+        </div>
+      </FadeTransform>
     );
   });
 
@@ -116,7 +127,7 @@ function About(props) {
           <h2>Corporate Leadership</h2>
         </div>
         <div className="col-12">
-          <Media list>{leaders}</Media>
+          <Stagger in>{leaders}</Stagger>
         </div>
       </div>
     </div>

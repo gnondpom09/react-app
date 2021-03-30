@@ -157,3 +157,115 @@ export const promosFailed = (errmess) => ({
   type: ActionTypes.PROMOS_FAILED,
   payload: errmess,
 });
+
+// LEADERS
+
+export const addLeaders = (leaders) => ({
+  type: ActionTypes.ADD_LEADERS,
+  payload: leaders,
+});
+
+export const leadersLoading = () => ({
+  type: ActionTypes.LEADERS_LOADING,
+});
+
+export const leadersFailed = (errMessage) => ({
+  type: ActionTypes.LEADERS_FAILED,
+  payload: errMessage,
+});
+
+export const fetchLeaders = () => (dispatch) => {
+  dispatch(leadersLoading());
+
+  return fetch(baseUrl + "leaders")
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        } else {
+          let err = new Error("Error " + res.status + " : " + res.statusText);
+          err.response = res;
+          throw err;
+        }
+      },
+      (err) => {
+        const message = err.message;
+        throw message;
+      }
+    )
+    .then((res) => res.json())
+    .then((leaders) => dispatch(addLeaders(leaders)))
+    .catch((err) => dispatch(leadersFailed(err.message)));
+};
+
+// FEEDBACK
+
+export const addFeedback = (feedback) => ({
+  type: ActionTypes.ADD_FEEDBACK,
+  payload: feedback,
+});
+
+export const feedBackFailed = (errMessage) => ({
+  type: ActionTypes.FEEDBACK_FAILED,
+  payload: errMessage,
+});
+
+export const postFeedback = (firstname, lastname, telnum, email, message) => (
+  dispatch
+) => {
+  const newFeedback = {
+    firstname,
+    lastname,
+    telnum,
+    email,
+    message,
+  };
+
+  return fetch(baseUrl + "feedback", {
+    method: "POST",
+    body: JSON.stringify(newFeedback),
+    headers: {
+      "Content-Type": "application/json",
+      credentials: "same-origin",
+    },
+  })
+    .then(
+      (res) => {
+        if (res) {
+          return res;
+        } else {
+          let error = new Error("Error " + res.status + " : " + res.statusText);
+          throw error;
+        }
+      },
+      (err) => {
+        const message = err.message;
+        throw message;
+      }
+    )
+    .then((res) => res.json())
+    .then((feedback) => dispatch(addFeedback(feedback)))
+    .catch((err) => dispatch(feedBackFailed(err.message)));
+};
+
+export const fetchFeedbacks = () => (dispatch) => {
+  return fetch(baseUrl + "feedback")
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        } else {
+          let error = new Error("error " + res.status + " : " + res.statusText);
+          error.response = res;
+          throw error;
+        }
+      },
+      (error) => {
+        let errmess = new Error(error.message);
+        throw errmess;
+      }
+    )
+    .then((res) => res.json())
+    .then((feedbacks) => dispatch(addFeedback(feedbacks)))
+    .catch((err) => dispatch(feedBackFailed(err.message)));
+};
